@@ -1,42 +1,33 @@
+//암호화페들과 그가격을 나열하는 기능 구현해보기
 import { useEffect, useState } from "react";
 
 function App() {
-  const [todos, setTodos] = useState("");
-  const [todosB, setTodosB] = useState([]);
-  const onChange = (e) => {
-    setTodos(e.target.value);
-  };
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (todos === "") {
-      return;
-    }
-    setTodos("");
-    setTodosB((prevArray) => [...prevArray, todos]);
-  };
-  console.log(todosB);
+  const [loading, setLoading] = useState(true);
+  const [cryptos, setCryptos] = useState([]);
+
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+      .then((response) => response.json())
+      .then((data) => {
+        setCryptos(data);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div>
-      <h1>My To Do List</h1>
-      <form onSubmit={onSubmit}>
-        <input
-          onChange={onChange}
-          value={todos}
-          type="text"
-          placeholder="Write your to do..."
-        />
-        <button>Add</button>
-      </form>
-      <hr />
-      <ul>
-        {todosB
-          .slice()
-          .reverse()
-          .map((todo, index) => (
-            <li key={index}>{todo}</li>
+      <h1>Cryptocurrency Prices {loading ? "" : `(${cryptos.length})`}</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <select>
+          {cryptos.map((crypto) => (
+            <option key={crypto.id} value={crypto.id}>
+              {crypto.name} ({crypto.symbol}): ${crypto.quotes.USD.price}
+            </option>
           ))}
-      </ul>
+        </select>
+      )}
     </div>
   );
 }
