@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+
+function Hi() {
+  useEffect(() => {
+    console.log("I'm rendered!");
+    return () => {
+      console.log("I'm gone!");
+    };
+  }, []);
+  return <h1>Hi</h1>;
+}
 
 function App() {
+  const [showing, setShowing] = useState(false);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>My App</h1>
+      {showing ? <Hi /> : null}
+      <button onClick={() => setShowing(!showing)}>
+        {showing ? "Hide" : "Show"}
+      </button>
     </div>
   );
 }
