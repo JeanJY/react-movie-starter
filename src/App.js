@@ -1,24 +1,42 @@
 import { useEffect, useState } from "react";
 
-function Hi() {
-  useEffect(() => {
-    console.log("I'm rendered!");
-    return () => {
-      console.log("I'm gone!");
-    };
-  }, []);
-  return <h1>Hi</h1>;
-}
-
 function App() {
-  const [showing, setShowing] = useState(false);
+  const [todos, setTodos] = useState("");
+  const [todosB, setTodosB] = useState([]);
+  const onChange = (e) => {
+    setTodos(e.target.value);
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (todos === "") {
+      return;
+    }
+    setTodos("");
+    setTodosB((prevArray) => [...prevArray, todos]);
+  };
+  console.log(todosB);
+
   return (
     <div>
-      <h1>My App</h1>
-      {showing ? <Hi /> : null}
-      <button onClick={() => setShowing(!showing)}>
-        {showing ? "Hide" : "Show"}
-      </button>
+      <h1>My To Do List</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          value={todos}
+          type="text"
+          placeholder="Write your to do..."
+        />
+        <button>Add</button>
+      </form>
+      <hr />
+      <ul>
+        {todosB
+          .slice()
+          .reverse()
+          .map((todo, index) => (
+            <li key={index}>{todo}</li>
+          ))}
+      </ul>
     </div>
   );
 }
